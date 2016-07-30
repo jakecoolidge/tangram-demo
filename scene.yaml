@@ -24,7 +24,27 @@ sources:
         url:  https://vector.mapzen.com/osm/all/{z}/{x}/{y}.topojson?api_key=vector-tiles-HqUVidw
         max_zoom: 16
 
+    overlay: 
+        type: GeoJSON
+        url: oakland-lines.geojson
+
 layers:
+    bikeway:
+        data: { source: overlay}
+        draw:
+            lines:
+                order: 6
+                color: '#00ff00'
+                width: 10
+                cap: round
+        route_two:
+            filter:
+                route: two
+            draw:
+                lines:
+                    order: 6
+                    color: blue
+
     earth:
         data: { source: osm }
         draw:
@@ -32,18 +52,18 @@ layers:
                 order: 0 # function() { return feature.sort_key; }
                 color: '#444'
 
-    landuse:
-        data: { source: osm }
-        draw:
-            polygons:
-                order: 1 # function() { return feature.sort_key; }
-                color: '#666'
-        park:
-            filter: 
-                kind: park
-            draw:
-                polygons:
-                    color: '#4c7300'
+    #landuse:
+    #    data: { source: osm }
+    #    draw:
+    #        polygons:
+    #            order: 1 # function() { return feature.sort_key; }
+    #            color: '#666'
+    #    park:
+    #        filter: 
+    #            kind: park
+    #        draw:
+    #            polygons:
+    #                color: '#4c7300'
 
     water:
         data: { source: osm }
@@ -67,7 +87,7 @@ layers:
                 kind: highway
             draw:
                 lines:
-                    order: 6 # function() { return feature.sort_key; }
+                    order: 7 # function() { return feature.sort_key; }
                     color: '#cc6666'
                     width: 12
                     outline:
@@ -90,20 +110,20 @@ layers:
                     color: red
                     width: 3
 
-    buildings:
-        data: { source: osm }
-        draw:
-            polygons:
-                order: 3 # function() { return feature.sort_key; }
-                color: |
-                    function () {
-                        var h = feature.height || 20;
-                        h = Math.min((h + 50)/ 255, .8); // max brightness: .8
-                        h = Math.max(h, .4); // min brightness: .4
-                        return [h, h, h];
-                    }
-        3d-buildings:
-            filter: { $zoom: { min: 15 } }
-            draw:
-                polygons:
-                    extrude: function () { return feature.height > 20 || $zoom >= 16; }
+    #buildings:
+    #    data: { source: osm }
+    #    draw:
+    #        polygons:
+    #            order: 3 # function() { return feature.sort_key; }
+    #            color: |
+    #                function () {
+    #                    var h = feature.height || 20;
+    #                    h = Math.min((h + 50)/ 255, .8); // max brightness: .8
+    #                    h = Math.max(h, .4); // min brightness: .4
+    #                    return [h, h, h];
+    #                }
+    #    3d-buildings:
+    #        filter: { $zoom: { min: 15 } }
+    #        draw:
+    #            polygons:
+    #                extrude: function () { return feature.height > 20 || $zoom >= 16; }
